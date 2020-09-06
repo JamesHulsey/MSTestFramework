@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>mstestframework</id>
+    <version>1.0.1</version>
+    <title>JamesSampleFrameworkDoNotUse</title>
+    <authors>James</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <description>Sample nuget package framework - do not use - not for production</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright 2020</copyright>
+    <tags>release tags</tags>
+  </metadata>
+</package>

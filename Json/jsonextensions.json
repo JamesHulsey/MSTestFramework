@@ -1,0 +1,9 @@
+{
+  "string": "james",
+  "int": "1",
+  "double": "1.1",
+  "long": "123456789",
+  "decimal": "1.123",
+  "bool": "true",
+  "datetime": "11/22/1986"
+}
