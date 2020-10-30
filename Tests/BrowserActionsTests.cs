@@ -61,6 +61,7 @@ namespace MSTestFramework.Tests
 
         [TestMethod]
         [TestProperty("TestType", "UI")]
+        [DoNotParallelize]
         public void DownloadFileTest()
         {
             var elementActions = new ElementActions(Driver);
@@ -68,14 +69,16 @@ namespace MSTestFramework.Tests
             elementActions.Click(By.XPath("//a[text()='File Download']"));
             var items = elementActions.GetElementsAsList(By.XPath("//div[@class='example']/a"));
             var downloadFile = items[1].Text;
-            FileHelper.DeleteFile($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads\\", downloadFile);
+            var downloadPath = string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["DownloadLocation"].ToString()) ? $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads\\" : System.Configuration.ConfigurationManager.AppSettings["DownloadLocation"];
+            FileHelper.DeleteFile(downloadPath, downloadFile);
             elementActions.Click(items[1]);
-            FileHelper.WaitForFileDownload($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads\\", downloadFile);
-            Assert.IsTrue(File.Exists($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads\\{downloadFile}"), "The file wasn't downloaded successfully.");
+            FileHelper.WaitForFileDownload(downloadFile, downloadPath);
+            Assert.IsTrue(File.Exists($"{downloadPath}\\{downloadFile}"), "The file wasn't downloaded successfully.");
         }
 
         [TestMethod]
         [TestProperty("TestType", "UI")]
+        [DoNotParallelize]
         public void CustomDownloadFileLocationTest()
         {
             var elementActions = new ElementActions(Driver);
@@ -83,14 +86,16 @@ namespace MSTestFramework.Tests
             elementActions.Click(By.XPath("//a[text()='File Download']"));
             var items = elementActions.GetElementsAsList(By.XPath("//div[@class='example']/a"));
             var downloadFile = items[1].Text;
-            FileHelper.DeleteFile($"{System.Configuration.ConfigurationManager.AppSettings["DownloadLocation"]}\\", downloadFile);
+            var downloadPath = string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["DownloadLocation"].ToString()) ? $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads\\" : System.Configuration.ConfigurationManager.AppSettings["DownloadLocation"];
+            FileHelper.DeleteFile(downloadPath, downloadFile);
             elementActions.Click(items[1]);
-            FileHelper.WaitForFileDownload($"{System.Configuration.ConfigurationManager.AppSettings["DownloadLocation"]}\\", downloadFile);
-            Assert.IsTrue(File.Exists($"{System.Configuration.ConfigurationManager.AppSettings["DownloadLocation"]}\\{downloadFile}"), "The file wasn't downloaded successfully.");
+            FileHelper.WaitForFileDownload(downloadFile, downloadPath);
+            Assert.IsTrue(File.Exists($"{downloadPath}\\{downloadFile}"), "The file wasn't downloaded successfully.");
         }
 
         [TestMethod]
         [TestProperty("TestType", "UI")]
+        [DoNotParallelize]
         public void DeleteFileTest()
         {
             var elementActions = new ElementActions(Driver);
@@ -98,11 +103,12 @@ namespace MSTestFramework.Tests
             elementActions.Click(By.XPath("//a[text()='File Download']"));
             var items = elementActions.GetElementsAsList(By.XPath("//div[@class='example']/a"));
             var downloadFile = items[1].Text;
-            FileHelper.DeleteFile($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads\\", downloadFile);
+            var downloadPath = string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["DownloadLocation"].ToString()) ? $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads\\" : System.Configuration.ConfigurationManager.AppSettings["DownloadLocation"];
+            FileHelper.DeleteFile(downloadPath, downloadFile);
             elementActions.Click(items[1]);
-            FileHelper.WaitForFileDownload($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads\\", downloadFile);
-            FileHelper.DeleteFile($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads\\", downloadFile);
-            Assert.IsFalse(File.Exists($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads\\{downloadFile}"), "The file wasn't deleted successfully.");
+            FileHelper.WaitForFileDownload(downloadFile, downloadPath);
+            FileHelper.DeleteFile(downloadPath, downloadFile);
+            Assert.IsFalse(File.Exists($"{downloadPath}\\{downloadFile}"), "The file wasn't deleted successfully.");
         }
     }
 }

@@ -2,6 +2,7 @@
 using MSTestFramework.Helpers;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using System;
@@ -21,7 +22,8 @@ namespace MSTestFramework.Factories
             var browser = string.Empty;
             var startMaximized = false;
             var ignoreSslErrors = false;
-            var downloadDirectory = string.IsNullOrEmpty(ConfigurationManager.AppSettings["DownloadLocation"]?.ToString()) ? $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads" : ConfigurationManager.AppSettings["DownloadLocation"].ToString(); // checking if the "DownloadLocation" key in app.config has a value. if it does then use that value for the download location. if not then use the defined location
+            // checking if the "DownloadLocation" key in app.config has a value. if it does then use that value for the download location. if not then use the defined location
+            var downloadDirectory = string.IsNullOrEmpty(ConfigurationManager.AppSettings["DownloadLocation"]?.ToString()) ? $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads" : ConfigurationManager.AppSettings["DownloadLocation"].ToString(); 
 
             try
             {
@@ -52,10 +54,10 @@ namespace MSTestFramework.Factories
                     case "ff":
                     case "fh":
                         var firefoxOptions = new FirefoxOptions();
-                        var firefoxProfile = new FirefoxProfile();
                         if (ignoreSslErrors) { firefoxOptions.AcceptInsecureCertificates = true; } // ignoring ssl errors if applicable
                         if (browser.Equals("fh")) { firefoxOptions.AddArguments("--headless"); } // making the browser headless if applicable
                         firefoxOptions.PageLoadStrategy = PageLoadStrategy.Eager;
+                        var firefoxProfile = new FirefoxProfile();
                         firefoxProfile.SetPreference("browser.download.folderList", 2);
                         firefoxProfile.SetPreference("browser.download.dir", downloadDirectory); 
                         firefoxProfile.SetPreference("browser.helperApps.neverAsk.saveToDisk", "application/pdf,application/x-pdf,application/octet-stream"); //list of MIME types to save to disk without asking what to use to open the file
@@ -66,12 +68,23 @@ namespace MSTestFramework.Factories
                         break;
                     case "ie":
                         var ieOptions = new InternetExplorerOptions();
-                        if (ignoreSslErrors) { ieOptions.AcceptInsecureCertificates = true; } // ignoring ssl errors if applicable
                         ieOptions.RequireWindowFocus = true;
                         ieOptions.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
                         ieOptions.EnsureCleanSession = true;
+                        ieOptions.IgnoreZoomLevel = true;
                         driver = new InternetExplorerDriver(ieOptions);
                         MyLogger.Log.Info("Instantiated ie driver.");
+                        break;
+                    case "e":
+                    case "eh":
+                        var eOptions = new Microsoft.Edge.SeleniumTools.EdgeOptions();
+                        eOptions.UseChromium = true;
+                        if (ignoreSslErrors) { eOptions.AcceptInsecureCertificates = true; } // ignoring ssl errors if applicable
+                        if (browser.Equals("eh")) { eOptions.AddArguments("--headless"); } // making the browser headless if applicable
+                        eOptions.AddUserProfilePreference("download.default_directory", downloadDirectory);
+                        driver = new Microsoft.Edge.SeleniumTools.EdgeDriver(eOptions);
+                        break;
+                    default:
                         break;
                 }
             }

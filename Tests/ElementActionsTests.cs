@@ -538,5 +538,45 @@ namespace MSTestFramework.Tests
             elementActions.DismissAlert();
             Assert.IsFalse(elementActions.IsAlertDisplayed(), "Alert was still displayed.");
         }
+
+        [TestMethod]
+        [TestProperty("TestType", "UI")]
+        public void NestedParentFrameTest()
+        {
+            var elementActions = new ElementActions(Driver);
+            Driver.Url = "https://demoqa.com/nestedframes";
+            var element = elementActions.FindElement(By.XPath("//body[text()='Parent frame']"));
+            Assert.AreEqual("Parent frame", element.Text, "The element text didn't match.");
+        }
+
+        [TestMethod]
+        [TestProperty("TestType", "UI")]
+        public void NestedChildFrameTest()
+        {
+            var elementActions = new ElementActions(Driver);
+            Driver.Url = "https://demoqa.com/nestedframes";
+            var element = elementActions.FindElement(By.XPath("//p"));
+            Assert.AreEqual("Child Iframe", element.Text, "The element text didn't match.");
+        }
+
+        [TestMethod]
+        [TestProperty("TestType", "UI")]
+        public void NoFrameTest()
+        {
+            var elementActions = new ElementActions(Driver);
+            Driver.Url = "https://demoqa.com/nestedframes";
+            var element = elementActions.FindElement(By.XPath("//div[@class='main-header']"));
+            Assert.AreEqual("Nested Frames", element.Text, "The element text didn't match.");
+        }
+
+        [TestMethod]
+        [TestProperty("TestType", "UI")]
+        public void BadElementTest()
+        {
+            var elementActions = new ElementActions(Driver);
+            Driver.Url = "https://demoqa.com/nestedframes";
+            var element = elementActions.FindElement(By.XPath("//div[@class='false-header']"));
+            Assert.IsNull(element, "The element object wasn't null.");
+        }
     }
 }
