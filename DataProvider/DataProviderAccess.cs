@@ -17,14 +17,16 @@ namespace MSTestFramework.DataProvider
         /// <returns></returns>
         public static JObject GetData(string filename)
         {
-            JObject data = null;
+            JObject data;
+
             try
             {
                 data = JsonHelper.LoadJson(filename, "TestData");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                MyLogger.Log.Error($"Failed to get test data from file: {filename}.");
+                MyLogger.Log.Error($"Failed to get test data from file: {filename}. {e.Message}");
+                throw e;
             }
 
             return data;

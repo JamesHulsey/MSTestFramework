@@ -58,7 +58,7 @@ namespace MSTestFramework.API
             } catch (Exception e)
             {
                 MyLogger.Log.Error($"Failed to create client with url: {url}. {e.Message}");
-                Assert.Fail($"Failed to create client with url: {url}. {e.Message}");
+                throw e;
             }
             
             request = new RestRequest(type);
@@ -76,7 +76,7 @@ namespace MSTestFramework.API
             catch (Exception e)
             {
                 MyLogger.Log.Error($"Failed to execute request: {request}. {e.Message}");
-                throw;
+                throw e;
             }
 
             return response;
@@ -102,12 +102,12 @@ namespace MSTestFramework.API
             catch (JsonReaderException jre)
             {
                 MyLogger.Log.Error($"Failed to parse response content into json. Response content: {response.Content}. {jre.Message}");
-                throw new Exception($"Failed to parse response content into json. Response content: {response.Content}. {jre.Message}");
+                throw jre;
             }
             catch (Exception e)
             {
                 MyLogger.Log.Error($"Failed to execute request: {request}. {e.Message}");
-                throw;
+                throw e;
             }
 
             return jsonResponse;

@@ -22,7 +22,7 @@ namespace MSTestFramework.Factories
             var browser = string.Empty;
             var startMaximized = false;
             var ignoreSslErrors = false;
-            // checking if the "DownloadLocation" key in app.config has a value. if it does then use that value for the download location. if not then use the defined location
+            // checking if the "DownloadLocation" key in app.config has a value. if it does then use that value for the download location. if not then use the directory location
             var downloadDirectory = string.IsNullOrEmpty(ConfigurationManager.AppSettings["DownloadLocation"]?.ToString()) ? $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\downloads" : ConfigurationManager.AppSettings["DownloadLocation"].ToString(); 
 
             try
@@ -67,18 +67,22 @@ namespace MSTestFramework.Factories
                         MyLogger.Log.Info("Instantiated firefox driver.");
                         break;
                     case "ie":
-                        var ieOptions = new InternetExplorerOptions();
-                        ieOptions.RequireWindowFocus = true;
-                        ieOptions.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
-                        ieOptions.EnsureCleanSession = true;
-                        ieOptions.IgnoreZoomLevel = true;
+                        var ieOptions = new InternetExplorerOptions
+                        {
+                            RequireWindowFocus = true,
+                            IntroduceInstabilityByIgnoringProtectedModeSettings = true,
+                            EnsureCleanSession = true,
+                            IgnoreZoomLevel = true
+                        };
                         driver = new InternetExplorerDriver(ieOptions);
                         MyLogger.Log.Info("Instantiated ie driver.");
                         break;
                     case "e":
                     case "eh":
-                        var eOptions = new Microsoft.Edge.SeleniumTools.EdgeOptions();
-                        eOptions.UseChromium = true;
+                        var eOptions = new Microsoft.Edge.SeleniumTools.EdgeOptions
+                        {
+                            UseChromium = true
+                        };
                         if (ignoreSslErrors) { eOptions.AcceptInsecureCertificates = true; } // ignoring ssl errors if applicable
                         if (browser.Equals("eh")) { eOptions.AddArguments("--headless"); } // making the browser headless if applicable
                         eOptions.AddUserProfilePreference("download.default_directory", downloadDirectory);

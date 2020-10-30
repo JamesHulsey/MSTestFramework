@@ -11,6 +11,12 @@ namespace MSTestFramework.Helpers
 {
     public class JsonHelper
     {
+        /// <summary>
+        /// Retrieves the contents of a .json file and converts it to a JObject.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="filePathFolders"></param>
+        /// <returns></returns>
         public static JObject LoadJson(string filename, params string[] filePathFolders)
         {
             var jsonFilePath = string.Empty;
